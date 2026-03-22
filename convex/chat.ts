@@ -50,3 +50,13 @@ function getSummaryFromJSON(data: any) {
   const firstPageId = Object.keys(data.query.pages)[0];
   return data.query.pages[firstPageId].extract;
 }
+
+export const getMessagesByUser = query({
+  args: { user: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("messages")
+      .withIndex("by_user", (q) => q.eq("user", args.user))
+      .collect();
+  },
+});
